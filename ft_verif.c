@@ -1,5 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_verif.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ochaar <ochaar@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/11/21 15:24:40 by ochaar            #+#    #+#             */
+/*   Updated: 2018/11/21 15:24:42 by ochaar           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
-#include "libft.h"
+#include "fillit.h"
 
 int		ft_good_tetri(char **tetri, int i, int j, int k)
 {
@@ -61,9 +73,7 @@ void	ft_extract_tetri(int fd, char **tetri, int i, int j)
 
 char**	ft_malloc(int fd, char **tetri, int i, const char *name)
 {
-	char	*line;
 	int		j;
-	int		k;
 
 	close(fd);
 	if (!(tetri = (char**)malloc(sizeof(char*) * (i + 2))))
@@ -78,6 +88,7 @@ char**	ft_malloc(int fd, char **tetri, int i, const char *name)
 	j = -1;
 	fd = open(name, O_RDONLY);
 	ft_extract_tetri(fd, tetri, 0, -1);
+	close(fd);
 	return (tetri);
 }
 
@@ -131,31 +142,26 @@ int		ft_gnl(int fd)
 	return(i);
 }
 
-int		main(int argc, const char *argv[])
+char	**ft_verif(const char **argv, char **tetri)
 {
 	int		fd;
-	char	**tetri;
 	int		i;
 
 	fd = open(argv[1], O_RDONLY);
-	if ((i = ft_gnl(fd)) == -1)
+	if ((i = ft_gnl(fd)) == -1 || i >= 26)
 	{
-		write (2, "error\n", 6);
-		return (0);
+		write (1, "error\n", 6);
+		return (NULL);
 	}
 	if ((tetri = ft_malloc(fd, tetri, i, argv[1])) == NULL)
 	{
-		write (2, "error\n", 6);
-		return (0);
+		write (1, "error\n", 6);
+		return (NULL);
 	}
 	if (ft_good_tetri(tetri, i, -1, 0) == -1)
 	{
-		write (2, "error\n", 6);
-		return (0);
+		write (1, "error\n", 6);
+		return (NULL);
 	}
-	printf("%s\n", tetri[0]);
-	printf("%s\n", tetri[1]);
-	printf("%s\n", tetri[2]);
-	printf("%s\n", tetri[3]);
-	return 0;
+	return (tetri);
 }

@@ -17,7 +17,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <fcntl.h>
-# define BUFF_SIZE 4096
+# define BUFF_SIZE 50
 
 typedef struct		s_list
 {
@@ -26,7 +26,7 @@ typedef struct		s_list
 	struct s_list	*next;
 }					t_list;
 
-int					get_next_line(const int fd, char **line);
+int 				get_next_line(const int fd, char **line);
 int					ft_atoi(const char *str);
 void				ft_bzero(void *s, size_t n);
 int					ft_isalnum(int c);
