@@ -6,7 +6,7 @@
 #    By: ochaar <ochaar@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/21 15:24:29 by ochaar            #+#    #+#              #
-#    Updated: 2018/11/21 15:24:31 by ochaar           ###   ########.fr        #
+#    Updated: 2018/11/23 16:26:15 by ochaar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ FLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)
 
-$(NAME):
+$(NAME): $(OBJ)
 	@make -C ./libft
 	@gcc $(FLAGS) -c $(SRCS)
 	@gcc $(FLAGS) $(OBJ) -o $(NAME) -Llibft -lft -I libft

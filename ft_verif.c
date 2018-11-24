@@ -6,11 +6,10 @@
 /*   By: ochaar <ochaar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/21 15:24:40 by ochaar            #+#    #+#             */
-/*   Updated: 2018/11/21 15:24:42 by ochaar           ###   ########.fr       */
+/*   Updated: 2018/11/23 18:47:40 by ochaar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "fillit.h"
 
 int		ft_good_tetri(char **tetri, int i, int j, int k)
@@ -44,8 +43,8 @@ int		ft_good_tetri(char **tetri, int i, int j, int k)
 
 void	ft_extract_tetri(int fd, char **tetri, int i, int j)
 {
-	int k;
-	char *line;
+	int		k;
+	char	*line;
 
 	while (get_next_line(fd, &line) > 0)
 	{
@@ -61,17 +60,17 @@ void	ft_extract_tetri(int fd, char **tetri, int i, int j)
 			while (k < 4)
 			{
 				tetri[i][++j] = line[++k];
-				if (tetri[i][j] == '#')
-					tetri[i][j] = i + 'A';
+				tetri[i][j] = tetri[i][j] == '#' ? i + 'A' : '.';
 			}
 			tetri[i][j] = '\n';
 		}
+		free(line);
 	}
 	tetri[i][j + 1] = '\0';
 	tetri[i + 1] = NULL;
 }
 
-char**	ft_malloc(int fd, char **tetri, int i, const char *name)
+char	**ft_malloc(int fd, char **tetri, int i, const char *name)
 {
 	int		j;
 
@@ -94,8 +93,8 @@ char**	ft_malloc(int fd, char **tetri, int i, const char *name)
 
 int		ft_check_grille(char *str, int i, int ret)
 {
-	static int cmt;
-	static int cpt;
+	static int	cmt;
+	static int	cpt;
 
 	if (str[0] != 0 && ret != 0)
 	{
@@ -117,11 +116,9 @@ int		ft_check_grille(char *str, int i, int ret)
 			return (-1);
 		cmt = 0;
 		cpt = 0;
-		return (0);
 	}
 	return (0);
 }
-
 
 int		ft_gnl(int fd)
 {
@@ -131,37 +128,19 @@ int		ft_gnl(int fd)
 
 	i = 0;
 	ret = 1;
-	while (ret > 0)
+	while ((ret = get_next_line(fd, &line)) > 0)
 	{
-		ret = get_next_line(fd, &line);
 		if (line[0] == 0)
 			i++;
 		if (ft_check_grille(line, 0, ret) == -1)
+		{
+			free(line);
 			return (-1);
+		}
+		free(line);
 	}
-	return(i);
-}
-
-char	**ft_verif(const char **argv, char **tetri)
-{
-	int		fd;
-	int		i;
-
-	fd = open(argv[1], O_RDONLY);
-	if ((i = ft_gnl(fd)) == -1 || i >= 26)
-	{
-		write (1, "error\n", 6);
-		return (NULL);
-	}
-	if ((tetri = ft_malloc(fd, tetri, i, argv[1])) == NULL)
-	{
-		write (1, "error\n", 6);
-		return (NULL);
-	}
-	if (ft_good_tetri(tetri, i, -1, 0) == -1)
-	{
-		write (1, "error\n", 6);
-		return (NULL);
-	}
-	return (tetri);
+	ret = get_next_line(fd, &line);
+	if (ft_check_grille(line, 0, ret) == -1)
+		return (-1);
+	return (i);
 }
